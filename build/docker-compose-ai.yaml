@@ -1,0 +1,10 @@
+version: "3.8"
+
+services:
+  ai-service:
+    build:
+      context: ..
+      dockerfile: build/Dockerfile-ai
+    ports:
+      - "5000:5000"
+    restart: unless-stopped

@@ -1,0 +1,34 @@
+version: "3.8"
+
+services:
+#  ai-service:
+#    build:
+#      context: ..
+#      dockerfile: build/Dockerfile-ai
+#    volumes:
+#  - ./uvicorn.sock:/app/uvicorn.sock
+#    restart: unless-stopped
+
+  go-client:
+    build:
+      context: ..
+      dockerfile: build/Dockerfile-go
+    container_name: ai-go-client
+    ports:
+      - "8080:8080"
+      - "8081:8081"
+    restart: unless-stopped
+#    depends_on:
+#      - ai-service
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  rtmp-server:
+    build:
+      context: ..
+      dockerfile: build/nginx_rtmp/Dockerfile-rtmp
+    container_name: rtmp-server
+    ports:
+      - "1935:1935"
+      - "8082:80"
+    restart: unless-stopped

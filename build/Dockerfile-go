@@ -1,0 +1,27 @@
+FROM gocv/opencv:latest
+
+WORKDIR /app
+
+RUN apt-get update && \
+    apt-get install -y curl && \
+    curl -L https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz -o ffmpeg.tar.xz && \
+    tar -xf ffmpeg.tar.xz && \
+    mv ffmpeg-*-amd64-static/ffmpeg /usr/local/bin/ && \
+    mv ffmpeg-*-amd64-static/ffprobe /usr/local/bin/ && \
+    rm -rf ffmpeg.tar.xz ffmpeg-*-amd64-static && \
+    apt-get autoremove -y && \
+    rm -rf /var/lib/apt/lists/*
+
+COPY go_client ./
+COPY configs/video_detect.toml ./configs/video_detect.toml
+
+RUN go mod tidy && \
+    go build -v -o app ./cmd
+
+EXPOSE 8080
+EXPOSE 8081
+
+ENV AI_URL=http://ai-service:5000/detect
+ENV RTMP_URL=rtmp://rtmp-server/live/stream
+
+CMD ["./app", "--config-path", "./configs/video_detect.toml"]

@@ -1,0 +1,5 @@
+FROM alfg/nginx-rtmp
+
+COPY /build/nginx_rtmp/nginx.conf /etc/nginx/nginx.conf
+
+CMD ["nginx", "-g", "daemon off;"]
