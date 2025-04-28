@@ -1,0 +1,30 @@
+[server]
+listen-http-addr = "0.0.0.0:8080"
+grpc-peer-addr = "0.0.0.0:8081"
+
+use-h2c = true
+
+
+[engine]
+uvicorn-socket = false # 开启Unix Socket 模式减少TCP消耗资源
+socket-path = "/app/uvicorn.sock"
+#detect-ai-url = "http://unix/detect" # windows下容器访问识别程序地址 （）
+detect-ai-url = "http://host.docker.internal:5000/detect" # windows下容器访问识别程序地址 （）
+healthy-heartbeat = 60
+close-chan-cap = 128
+push-url-internal-pre = "rtmp://rtmp-server/live/stream"
+push-url-public-pre = "rtmp://localhost:1935/live/stream"
+
+[logger]
+log-path = "./logs/detectLog"
+log-level = "debug" #日志级别 全大写或全小写
+split-max-size = 128
+max-age = 30
+max-backups = 100
+local-time = true
+compress = false
+
+
+
+
+

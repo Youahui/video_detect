@@ -1,0 +1,49 @@
+syntax = "proto3";
+
+package pb;
+
+option go_package = "./;pb";
+
+service DetectService{
+  rpc CreateSession (CreateSessionReq) returns (SessionDesc);
+  rpc GetAllSessionDesc(Empty) returns (AllSessionDescResp);
+  rpc GetSessionDescByID(SessionIDReq) returns (GetSessionDescByIDResp);
+  rpc StopDetect(SessionIDReq) returns (GenericResp);
+  rpc ContinueDetect(SessionIDReq) returns (GenericResp);
+  rpc RemoveSession(SessionIDReq) returns (GenericResp);
+}
+
+message CreateSessionReq{
+  string id = 1;
+  string rtspURL = 2;
+  int32 width = 3;
+  int32 height = 4;
+  int32 framerate = 5;
+  int32 retryTimes = 6;
+}
+
+message SessionIDReq {
+  string sessionID = 1;
+}
+
+message SessionDesc {
+  string id = 1;
+  string streamKey = 2;
+  string pushUrlPublic = 3;
+  bool detectStatus = 4; // 识别状态 false 停止 true 识别
+}
+
+message GetSessionDescByIDResp{
+  bool exists = 1; // 是否存在
+  SessionDesc session = 2;
+}
+
+message AllSessionDescResp{
+  repeated SessionDesc sessions = 1;
+}
+
+message GenericResp {
+  bool ok = 1;
+}
+
+message Empty{}
